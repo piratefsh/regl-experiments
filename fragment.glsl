@@ -20,21 +20,25 @@ void main () {
 
   vec2 pos = gl_FragCoord.xy/u_resolution;
 
-  vec3 colorA = vec3(1., 1., 1.);
-  vec3 colorB = vec3(0., 0., 0.);
+  vec3 colorA = vec3(1.2 * sin(u_time), 0, 0);
+  vec3 colorB = vec3(0, 0, 1.2 - sin(u_time));
 
   vec3 pct = vec3(pos.x);
   // pct.r = smoothstep(0., 1., pos.x);
   // pct.r = ceil(sin(pos.x/2.)) + floor(sin(pos.x/2.));
-  float y = sin(pos.x*10.) * 0.5;
+  float oscillations = 4.;
+  float scaleSin = 0.5;
+  float shiftSin = 0.5;
+  float y = sin(pos.x*PI*oscillations) * scaleSin + shiftSin;
   pct.r  = y;
   float scale = 0.1;
-  pct.g = floor(pos.x / scale) * scale;
+  // pct.g = step(0.5, y);
+  pct.g = ceil(pos.x / scale) * scale;
   // pos.y = ceil(pos.x/2.);
-  // pct.b = pow(pos.x, 0.5);
+  pct.b = 0.5;
   vec3 color = mix(colorA, colorB, pct);
-  color = mix(color, vec3(1., 0., 0.), plot(pos, pct.r));
-  color = mix(color, vec3(0., 1.0, 0.), plot(pos, pct.g));
+  // color = mix(color, vec3(1., 0., 0.), plot(pos, pct.r));
+  color = mix(colorA, colorB, pct.g);
   // color = mix(color, vec3(0., 0., 1.), plot(pos, pct.b));
   gl_FragColor = vec4(color, 1.0);
 }
