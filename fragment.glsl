@@ -20,8 +20,8 @@ void main () {
 
   vec2 pos = gl_FragCoord.xy/u_resolution;
 
-  vec3 colorA = vec3(1.2 * sin(u_time), 0, 0);
-  vec3 colorB = vec3(0, 0, 1.2 - sin(u_time));
+  vec3 colorA = vec3(1. * sin(u_time), 0, 0);
+  vec3 colorB = vec3(0, 0, 1. - sin(u_time));
 
   vec3 pct = vec3(pos.x);
   // pct.r = smoothstep(0., 1., pos.x);
