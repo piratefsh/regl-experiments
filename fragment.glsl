@@ -21,6 +21,10 @@ vec3 hsb2rgb(vec3 c){
   rgb = rgb * rgb * (3. - 2. * rgb);
   return c.z * mix(vec3(1.), rgb, c.y);
 }
+
+float parabola(float x, float k){
+  return pow(x, k);
+}
 void main () {
   vec2 location = (u_mouse - gl_FragCoord.xy) / u_resolution;
   gl_FragColor = vec4(1., location.x, location.y, 1.0);
@@ -35,13 +39,17 @@ void main () {
   // pct.r = ceil(sin(pos.x/2.)) + floor(sin(pos.x/2.));
   float oscillations = 1.;
   float scaleSin = 0.5;
-  float shiftSin = mod(sin(u_time), 1.);
+  float shiftSin = mod(sin(u_time/1000.), 1.);
   float y = sin(pos.x*PI*oscillations) * scaleSin + shiftSin;
   float scale = 0.125;
   pct.r  = y;
   pct.g = ceil(pos.x / scale) * scale;
-  // pct.b = 0.5;
-  // color = mix(color, vec3(1., 0., 0.), plot(pos, pct.r));
-  vec3 color = vec3(pct.r, 1, 1);
+
+  vec2 dir = vec2(0.5) - pos;
+  float radius = clamp(length(dir) * 2., 0., 1.);
+  float angle = atan(dir.x, dir.y);
+  angle = angle / (PI * 2.);
+  angle =  parabola(angle, abs(sin(u_time/10.)) * 1.);
+  vec3 color = vec3(angle, radius, 1);
   gl_FragColor = vec4(hsb2rgb(color), 1.);
 }
